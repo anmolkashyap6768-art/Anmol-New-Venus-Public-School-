@@ -488,3 +488,51 @@ Message: ${message || "No additional message"}`;
     });
   }
 });
+/* =====================================
+   ANVPS INTRO TIMER
+   Show once per browser tab session
+   ===================================== */
+
+(function () {
+  function startSchoolIntro() {
+    const intro = document.getElementById("schoolIntro");
+
+    if (!intro) return;
+
+    let alreadyShown = false;
+
+    try {
+      alreadyShown =
+        sessionStorage.getItem("anvpsIntroShown") === "yes";
+
+      if (!alreadyShown) {
+        sessionStorage.setItem("anvpsIntroShown", "yes");
+      }
+    } catch (error) {
+      // If session storage is unavailable, show the intro normally.
+    }
+
+    if (alreadyShown) {
+      intro.classList.add("is-hidden");
+      return;
+    }
+
+    window.setTimeout(function () {
+      intro.classList.add("is-hidden");
+
+      window.setTimeout(function () {
+        intro.remove();
+      }, 800);
+    }, 4000);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      startSchoolIntro,
+      { once: true }
+    );
+  } else {
+    startSchoolIntro();
+  }
+})();
